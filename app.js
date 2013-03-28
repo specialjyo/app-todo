@@ -31,7 +31,16 @@ var TodoCtrl = function ($scope, Todo) {
             $scope.todo = {};
         });
     };
-
+    $scope.deleteItem = function(){
+        var id = this.todo.id;
+        Todo.delete({ id:id }, function () {
+            $("#row_" + id).fadeOut();
+        });
+    }
+    $scope.toggleStrike = function(){
+        var id= this.todo.id;
+        $('#item_' + id).toggleClass('strike');
+    }
 var updateByAttr = function(arr, attr1, value1, newRecord){
         if(!arr){
             return false;

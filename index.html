@@ -11,9 +11,10 @@
     <h4>My Todo List</h4>
     <div id="list-container">
     <table class="table table-hover table-striped table-bordered todolist">
-        <tr ng-repeat="todo in Todos.record" id="row_{{id}}">
+        <tr ng-repeat="todo in Todos.record" id="row_{{todo.id}}">
             <td><a ng-click="editItem()"><i class="icon icon-edit"></i></a></td>
-            <td style="width:100%"><b>{{todo.name}}</b> <span>{{todo.desc}}</span></td>
+            <td><a ng-click="deleteItem()"><i class="icon icon-minus-sign"></i></a></td>
+            <td id="item_{{todo.id}}" style="width:100%" ng-click="toggleStrike()"><b>{{todo.name}}</b> <span>{{todo.desc}}</span></td>
         </tr>
     </table>
     </div>
