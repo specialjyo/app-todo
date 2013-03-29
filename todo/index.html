@@ -13,7 +13,7 @@
     <table class="table table-hover table-striped table-bordered todolist">
         <tr ng-repeat="todo in Todos.record" id="row_{{todo.id}}">
             <td><a ng-click="deleteItem()"><i class="icon icon-minus-sign"></i></a></td>
-            <td ng-class="{strike:todo.complete}" id="item_{{todo.id}}" style="width:100%" ng-click="updateItem()"><b>{{todo.name}}</b> <span>{{todo.desc}}</span></td>
+            <td ng-class="{strike:todo.complete}" id="item_{{todo.id}}" style="width:100%" ng-click="updateItem()"><b>{{todo.name}}</b></td>
         </tr>
     </table>
     </div>
@@ -47,7 +47,7 @@
         &lt;table class="table table-hover table-striped table-bordered todolist"&gt;
             &lt;tr ng-repeat="todo in Todos.record" id="row_{{todo.id}}"&gt;
                 &lt;td&gt;&lt;a ng-click="deleteItem()"&gt;&lt;i class="icon icon-minus-sign"&gt;&lt;/i&gt;&lt;/a&gt;&lt;/td&gt;
-                &lt;td ng-class="{strike:todo.complete}" id="item_{{todo.id}}" style="width:100%" ng-click="updateItem()"&gt;&lt;b&gt;{{todo.name}}&lt;/b&gt; &lt;span&gt;{{todo.desc}}&lt;/span&gt;&lt;/td&gt;
+                &lt;td ng-class="{strike:todo.complete}" id="item_{{todo.id}}" style="width:100%" ng-click="updateItem()"&gt;&lt;b&gt;{{todo.name}}&lt;/b&gt;&lt;/td&gt;
             &lt;/tr&gt;
         &lt;/table&gt;
     &lt;/div&gt;

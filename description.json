@@ -1,0 +1,8 @@
+{
+	"api_name":"todo",
+	"name":"Todo List",
+	"description":"A simple AngularJS application showing how to create, update, and delete database records on the DreamFactory Services Platform.",
+	"is_active":1,
+	"url":"/index.html",
+	"is_url_external":0
+}
