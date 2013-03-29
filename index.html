@@ -12,18 +12,13 @@
     <div id="list-container">
     <table class="table table-hover table-striped table-bordered todolist">
         <tr ng-repeat="todo in Todos.record" id="row_{{todo.id}}">
-            <td><a ng-click="editItem()"><i class="icon icon-edit"></i></a></td>
             <td><a ng-click="deleteItem()"><i class="icon icon-minus-sign"></i></a></td>
-            <td id="item_{{todo.id}}" style="width:100%" ng-click="toggleStrike()"><b>{{todo.name}}</b> <span>{{todo.desc}}</span></td>
+            <td ng-class="{strike:todo.complete}" id="item_{{todo.id}}" style="width:100%" ng-click="updateItem()"><b>{{todo.name}}</b> <span>{{todo.desc}}</span></td>
         </tr>
     </table>
     </div>
-    <h5>{{action}} Todo</h5>
-
-    <input type="text" ng-model="todo.name"/><br/>
-    <input type="text" ng-model="todo.desc"/><br/>
+    <input type="text" placeholder="Add Item" ng-model="todo.name"/><br/>
     <button ng-show="action == 'Add'" class="btn btn-primary" ng-click="addItem()">Add Item</button>
-    <button ng-show="action == 'Update'" class="btn btn-primary" ng-click="updateItem()">Update Item</button>
 </div>
 <br/>
 <h4>View the source for this application</h4>
@@ -48,17 +43,16 @@
 &lt;body ng-controller="TodoCtrl"&gt;
 &lt;div&gt;
     &lt;h4&gt;My Todo List&lt;/h4&gt;
-    &lt;table class="table table-hover table-striped table-bordered todolist"&gt;
-        &lt;tr ng-repeat="todo in Todos.record" id="row_{{id}}"&gt;
-            &lt;td&gt;&lt;a ng-click="editItem()"&gt;&lt;i class="icon icon-edit"&gt;&lt;/i&gt;&lt;/a&gt;&lt;/td&gt;&lt;td style="width:100%"&gt;&lt;b&gt;{{todo.name}}&lt;/b&gt;  &lt;span&gt;{{todo.desc}}&lt;/span&gt;&lt;/td&gt;
-        &lt;/tr&gt;
-    &lt;/table&gt;
-    &lt;h5&gt;{{action}} Todo&lt;/h5&gt;
-
-    &lt;input type="text" ng-model = "todo.name"/&gt;&lt;br/&gt;
-    &lt;input type="text" ng-model = "todo.desc"/&gt;&lt;br/&gt;
-    &lt;button ng-show = "action == 'Add'" class="btn btn-primary" ng-click="addItem()"&gt;Add Item&lt;/button&gt;
-    &lt;button ng-show = "action == 'Update'" class="btn btn-primary" ng-click="updateItem()"&gt;Update Item&lt;/button&gt;
+    &lt;div id="list-container"&gt;
+        &lt;table class="table table-hover table-striped table-bordered todolist"&gt;
+            &lt;tr ng-repeat="todo in Todos.record" id="row_{{todo.id}}"&gt;
+                &lt;td&gt;&lt;a ng-click="deleteItem()"&gt;&lt;i class="icon icon-minus-sign"&gt;&lt;/i&gt;&lt;/a&gt;&lt;/td&gt;
+                &lt;td ng-class="{strike:todo.complete}" id="item_{{todo.id}}" style="width:100%" ng-click="updateItem()"&gt;&lt;b&gt;{{todo.name}}&lt;/b&gt; &lt;span&gt;{{todo.desc}}&lt;/span&gt;&lt;/td&gt;
+            &lt;/tr&gt;
+        &lt;/table&gt;
+    &lt;/div&gt;
+    &lt;input type="text" placeholder="Add Item" ng-model="todo.name"/&gt;&lt;br/&gt;
+    &lt;button ng-show="action == 'Add'" class="btn btn-primary" ng-click="addItem()"&gt;Add Item&lt;/button&gt;
 &lt;/div&gt;
 &lt;script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"&gt;&lt;/script&gt;
 &lt;script src="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/js/bootstrap.min.js"&gt;&lt;/script&gt;
@@ -88,23 +82,34 @@ var TodoCtrl = function ($scope, Todo) {
     $scope.action="Add";
     $scope.Todos = Todo.get();
     $scope.addItem = function(){
+        $scope.todo.complete = false;
         Todo.save($scope.todo, function(data){
             $scope.Todos.record.push(data);
+            $scope.todo={};
         });
-    }
-    $scope.editItem = function(){
-        $scope.action = "Update";
-        $scope.todo = angular.copy(this.todo);
+
     }
     $scope.updateItem = function () {
-        var id = $scope.todo.id;
-        Todo.update({id:id}, $scope.todo, function () {
-            updateByAttr($scope.Todos.record, 'id', id, $scope.todo);
-            $scope.action="Add";
-            $scope.todo = {};
+        var todo = this.todo;
+
+        if(this.todo.complete === false){
+            this.todo.complete = true;
+        }else{
+            this.todo.complete = false;
+        }
+        $('#item_' + todo.id).toggleClass('strike');
+        Todo.update({id:todo.id}, todo, function () {
+            updateByAttr($scope.Todos.record, 'id', todo.id, todo);
+
         });
     };
+    $scope.deleteItem = function(){
 
+        var id = this.todo.id;
+        Todo.delete({ id:id }, function () {
+            $("#row_" + id).fadeOut();
+        });
+    }
 var updateByAttr = function(arr, attr1, value1, newRecord){
         if(!arr){
             return false;
@@ -119,6 +124,9 @@ var updateByAttr = function(arr, attr1, value1, newRecord){
     };
 
 };
+
+
+
 
 
 

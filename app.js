@@ -15,31 +15,33 @@ var TodoCtrl = function ($scope, Todo) {
     $scope.action="Add";
     $scope.Todos = Todo.get();
     $scope.addItem = function(){
+        $scope.todo.complete = false;
         Todo.save($scope.todo, function(data){
             $scope.Todos.record.push(data);
+            $scope.todo={};
         });
-    }
-    $scope.editItem = function(){
-        $scope.action = "Update";
-        $scope.todo = angular.copy(this.todo);
+
     }
     $scope.updateItem = function () {
-        var id = $scope.todo.id;
-        Todo.update({id:id}, $scope.todo, function () {
-            updateByAttr($scope.Todos.record, 'id', id, $scope.todo);
-            $scope.action="Add";
-            $scope.todo = {};
+        var todo = this.todo;
+
+        if(this.todo.complete === false){
+            this.todo.complete = true;
+        }else{
+            this.todo.complete = false;
+        }
+        $('#item_' + todo.id).toggleClass('strike');
+        Todo.update({id:todo.id}, todo, function () {
+            updateByAttr($scope.Todos.record, 'id', todo.id, todo);
+
         });
     };
     $scope.deleteItem = function(){
+
         var id = this.todo.id;
         Todo.delete({ id:id }, function () {
             $("#row_" + id).fadeOut();
         });
-    }
-    $scope.toggleStrike = function(){
-        var id= this.todo.id;
-        $('#item_' + id).toggleClass('strike');
     }
 var updateByAttr = function(arr, attr1, value1, newRecord){
         if(!arr){
